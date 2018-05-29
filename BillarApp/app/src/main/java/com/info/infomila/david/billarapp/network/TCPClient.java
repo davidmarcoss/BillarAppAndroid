@@ -181,7 +181,15 @@ public class TCPClient {
             dataSalida.flush();
             dataSalida.writeObject(sessionId);
             dataSalida.flush();
-            dataSalida.writeObject(soci);
+            dataSalida.writeObject(soci.getNif());
+            dataSalida.flush();
+            dataSalida.writeObject(soci.getNom());
+            dataSalida.flush();
+            dataSalida.writeObject(soci.getCognom1());
+            dataSalida.flush();
+            dataSalida.writeObject(soci.getCognom2());
+            dataSalida.flush();
+            dataSalida.writeObject(soci.getPasswordHash());
             dataSalida.flush();
 
             int response = dataEntrada.readInt();

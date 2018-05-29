@@ -53,9 +53,10 @@ public class EstadistiquesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View contenidorFragment = inflater.inflate(R.layout.fragment_estadistiques, container, false);
 
+
         rcvEstadistiques = contenidorFragment.findViewById(R.id.rcvEstadistiques);
         if (rcvEstadistiques != null) {
-            if(rcvEstadistiques.getAdapter()==null) {
+            if (rcvEstadistiques.getAdapter() == null) {
                 List<EstadisticaModalitat> llistaEstadistiques = soci.getEstadistiques();
                 estadisticaAdapter = new EstadisticaAdapter(this.getContext(), llistaEstadistiques);
                 rcvEstadistiques.setLayoutManager(new LinearLayoutManager(this.getContext()));

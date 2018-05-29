@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String SOCI = "Soci";
     public static final String SESSION_ID = "session_id";
 
-    private Soci soci;
+    public Soci soci;
     private String sessionId;
 
     private Toolbar toolbar;
@@ -43,8 +44,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        soci = (Soci) getIntent().getExtras().get(SOCI);
-        sessionId = (String) getIntent().getExtras().get(SESSION_ID);
+        if (getIntent().getExtras() != null) {
+            soci = (Soci) getIntent().getExtras().get(SOCI);
+            sessionId = (String) getIntent().getExtras().get(SESSION_ID);
+        }
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
     }
 
 
@@ -72,11 +76,17 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ProfileActivity.class);
             intent.putExtra(MainActivity.SOCI, soci);
             intent.putExtra(MainActivity.SESSION_ID, sessionId);
-            this.startActivity(intent);
+            this.startActivityForResult(intent, 1);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        soci = (Soci) data.getExtras().get(SOCI);
+        sessionId = (String) data.getExtras().get(SESSION_ID);
     }
 
 

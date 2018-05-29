@@ -21,7 +21,7 @@ public class Soci implements Serializable
     private String cognom2;
     private Date dataAlta;
     private String passwordHash;
-    private Blob foto;
+    private transient Blob foto;
     private List<EstadisticaModalitat> estadistiques = new ArrayList<>();
     private List<Inscripcio> inscripcions = new ArrayList();
     private boolean actiu;
@@ -40,7 +40,7 @@ public class Soci implements Serializable
         setCognom2(cognom2);
         setDataAlta(new Date());
         setPasswordHash(passwordHash);
-        setFoto(foto);
+        //setFoto(foto);
         setActiu(actiu);
     }
 
