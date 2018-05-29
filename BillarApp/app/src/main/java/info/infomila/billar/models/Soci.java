@@ -135,6 +135,11 @@ public class Soci implements Serializable
         this.foto = foto;
     }
 
+    public List<EstadisticaModalitat> getEstadistiques()
+    {
+        return estadistiques;
+    }
+
     public Iterator<EstadisticaModalitat> iteEstadistiques()
     {
         return estadistiques.iterator();

@@ -10,13 +10,6 @@
     android:paddingLeft="24dp"
     android:paddingRight="24dp">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:visibility="invisible"
-        android:layout_centerInParent="true"/>
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -34,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:hint="DNI"
-                android:text="23844512K"/>
+                android:text="23844512K" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -47,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:hint="Password"
-                android:text="23844512K"/>
+                android:text="23844512K" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
@@ -58,6 +51,14 @@
             android:layout_marginBottom="24dp"
             android:padding="12dp"
             android:text="Login"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:visibility="invisible"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerInParent="true"/>
     </LinearLayout>
 
 </RelativeLayout>

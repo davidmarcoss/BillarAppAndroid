@@ -40,6 +40,7 @@ public class TCPClient {
 
             ObjectInputStream dataEntrada = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream dataSalida = new ObjectOutputStream(socket.getOutputStream());
+
             dataSalida.writeInt(1);
             dataSalida.flush();
             dataSalida.writeObject(nif);
@@ -47,15 +48,14 @@ public class TCPClient {
             dataSalida.writeObject(pass);
             dataSalida.flush();
 
-            String dataServer = null;
             try {
-                dataServer = (String) dataEntrada.readObject();
-
-                if (!dataServer.equals("-1")) {
-                    LoginActivity.editor.putString("session_id", dataServer);
+                int status = dataEntrada.readInt();
+                if (status == 1) {
+                    LoginActivity.editor.putString("session_id", (String) dataEntrada.readObject());
                     user = (Soci) dataEntrada.readObject();
-                }
+                } else {
 
+                }
             } catch (ClassNotFoundException e) {
                 socket.close();
             } finally {
@@ -71,8 +71,8 @@ public class TCPClient {
         return user;
     }
 
-    public static List<Torneig> getTorneijosOberts() {
-        List<Torneig> llTorneig = null;
+    public static List<Torneig> getTornejosOberts(String sessionId) {
+        List<Torneig> tornejos = null;
 
         try {
             InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
@@ -81,36 +81,30 @@ public class TCPClient {
             ObjectInputStream dataEntrada = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream dataSalida = new ObjectOutputStream(socket.getOutputStream());
 
-            dataSalida.writeObject("4");
+            dataSalida.writeInt(2);
             dataSalida.flush();
-            dataSalida.writeObject(LoginActivity.pref.getString("session_id", null));
+            dataSalida.writeObject(sessionId);
             dataSalida.flush();
-
-            String dataServer = null;
 
             try {
-                dataServer = (String) dataEntrada.readObject();
-
-                if (!dataServer.equals("-1")) {
-                    llTorneig = (List<Torneig>) dataEntrada.readObject();
+                int response = dataEntrada.readInt();
+                if (response == 1) {
+                    tornejos = (List<Torneig>) dataEntrada.readObject();
                 }
-
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-
-
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return llTorneig;
+        return tornejos;
     }
 
-    public static List<Torneig> getTorneijosObertsOnParticipo() {
-        List<Torneig> llTorneig = null;
+    public static List<Torneig> getTornejosOnParticipo(String sessionId) {
+        List<Torneig> tornejos = null;
 
         try {
             InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
@@ -119,19 +113,15 @@ public class TCPClient {
             ObjectInputStream dataEntrada = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream dataSalida = new ObjectOutputStream(socket.getOutputStream());
 
-            dataSalida.writeObject("3");
+            dataSalida.writeInt(3);
             dataSalida.flush();
             dataSalida.writeObject(LoginActivity.pref.getString("session_id", null));
             dataSalida.flush();
 
-            String dataServer = null;
-
             try {
-                dataServer = (String) dataEntrada.readObject();
-
-                if (!dataServer.equals("-1")) {
-                    llTorneig = (List<Torneig>) dataEntrada.readObject();
-                    Log.e("getListTornServer", llTorneig.size() + "");
+                int response = dataEntrada.readInt();
+                if (response == 1) {
+                    tornejos = (List<Torneig>) dataEntrada.readObject();
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -144,11 +134,11 @@ public class TCPClient {
             e.printStackTrace();
         }
 
-        return llTorneig;
+        return tornejos;
     }
 
-    public static int ferInscripcio(String sessionID, Integer torneigID) {
-        int status = 0;
+    public static boolean ferInscripcio(String sessionID, Integer torneigID) {
+        boolean status = false;
 
         try {
             InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
@@ -157,23 +147,16 @@ public class TCPClient {
             ObjectInputStream dataEntrada = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream dataSalida = new ObjectOutputStream(socket.getOutputStream());
 
-            dataSalida.writeObject("5");
+            dataSalida.writeInt(4);
             dataSalida.flush();
             dataSalida.writeObject(sessionID);
             dataSalida.flush();
-            dataSalida.writeObject(torneigID);
+            dataSalida.writeInt(torneigID);
             dataSalida.flush();
 
-            Integer dataServer = null;
-
-            try {
-                dataServer = (Integer) dataEntrada.readObject();
-
-                if (dataServer.equals(-1)) {
-                    status = -1;
-                }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            int response = dataEntrada.readInt();
+            if (response == 1) {
+                status = true;
             }
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -184,8 +167,8 @@ public class TCPClient {
         return status;
     }
 
-    public static int actualizarSoci(Soci soci) {
-        int status = 0;
+    public static boolean updateSoci(Soci soci, String sessionId) {
+        boolean status = false;
 
         try {
             InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
@@ -194,23 +177,18 @@ public class TCPClient {
             ObjectInputStream dataEntrada = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream dataSalida = new ObjectOutputStream(socket.getOutputStream());
 
-            dataSalida.writeObject("2");
+            dataSalida.writeInt(5);
             dataSalida.flush();
-            dataSalida.writeObject(LoginActivity.pref.getString("session_id", null));
+            dataSalida.writeObject(sessionId);
             dataSalida.flush();
             dataSalida.writeObject(soci);
             dataSalida.flush();
 
-            Integer dataServer = null;
-
-            try {
-                dataServer = (Integer) dataEntrada.readObject();
-
-                if (dataServer.equals(-1)) {
-                    status = -1;
-                }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            int response = dataEntrada.readInt();
+            if (response == 1) {
+                status = true;
+            } else {
+                status = false;
             }
         } catch (UnknownHostException e) {
             e.printStackTrace();

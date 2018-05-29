@@ -21,6 +21,6 @@ public class LoginAsyncTask extends AsyncTask<String, String, Soci> {
     @Override
     protected void onPostExecute(Soci s) {
         super.onPostExecute(s);
-        loginActivity.loginRequestReceived(s);
+        loginActivity.OnLoginReceived(s);
     }
 }

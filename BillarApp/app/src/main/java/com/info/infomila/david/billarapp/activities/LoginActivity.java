@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (nif != null && password != null && sessionId != null) {
             progressBar.setVisibility(View.VISIBLE);
-            sendLoginRequest(nif, password);
+            LoginRequest(nif, password);
         }
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                 String passEntrada = getPasswordHash(etPassword.getText().toString());
 
                 if (nifEntrada.length() > 0 && passEntrada.length() > 0) {
-                    sendLoginRequest(nifEntrada, passEntrada);
+                    LoginRequest(nifEntrada, passEntrada);
                 } else {
                     Toast.makeText(getBaseContext(), "Revisa el formulari", Toast.LENGTH_LONG).show();
                 }
@@ -75,12 +75,12 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void sendLoginRequest(String nif, String pass) {
+    public void LoginRequest(String nif, String pass) {
         LoginAsyncTask connect = new LoginAsyncTask(this);
         connect.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, nif, pass);
     }
 
-    public void loginRequestReceived(Soci s) {
+    public void OnLoginReceived(Soci s) {
         if (s != null) {
             editor.putString("nif", s.getNif());
             editor.putString("password", s.getPasswordHash());
@@ -89,6 +89,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(getBaseContext(), "Login success", Toast.LENGTH_LONG).show();
             Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
             mainActivityIntent.putExtra(MainActivity.SOCI, s);
+            mainActivityIntent.putExtra(MainActivity.SESSION_ID, pref.getString("session_id", null));
             startActivity(mainActivityIntent);
             progressBar.setVisibility(View.INVISIBLE);
         } else {

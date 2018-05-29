@@ -1,5 +1,8 @@
 package info.infomila.billar.models;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -7,8 +10,7 @@ public class EstadisticaModalitat implements Serializable
 {
 
     private static final long serialVersionUID = 3L;
-    private Soci soci;
-    private Modalitat modalitat;
+    private EstadisticaModalitatPK emPK;
     private double coeficientBase;
     private int carambolesTemporadaActual;
     private int entradesTemporadaActual;
@@ -19,8 +21,7 @@ public class EstadisticaModalitat implements Serializable
 
     public EstadisticaModalitat(Soci soci, Modalitat modalitat, double coeficientBase, int carambolesTemporadaActual, int entradesTemporadaActual)
     {
-        setSoci(soci);
-        setModalitat(modalitat);
+        emPK = new EstadisticaModalitatPK(soci, modalitat);
         setCoeficientBase(coeficientBase);
         setCarambolesTemporadaActual(carambolesTemporadaActual);
         setEntradesTemporadaActual(entradesTemporadaActual);
@@ -28,30 +29,22 @@ public class EstadisticaModalitat implements Serializable
 
     public Soci getSoci()
     {
-        return soci;
+        return emPK.getSoci();
     }
 
     protected final void setSoci(Soci soci)
     {
-        if (this.soci == null) {
-            throw new EstadisticaModalitatException("El soci no pot ser null");
-        }
-        
-        this.soci = soci;
+        emPK.setSoci(soci);
     }
 
     public Modalitat getModalitat()
     {
-        return modalitat;
+        return emPK.getModalitat();
     }
 
     protected final void setModalitat(Modalitat modalitat)
     {
-        if (this.modalitat == null) {
-            throw new EstadisticaModalitatException("La modalitat no pot ser null");
-        }
-        
-        this.modalitat = modalitat;
+        emPK.setModalitat(modalitat);
     }
 
     public double getCoeficientBase()
@@ -96,15 +89,16 @@ public class EstadisticaModalitat implements Serializable
         this.entradesTemporadaActual = entradesTemporadaActual;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public int hashCode()
     {
-        int hash = 7;
-        hash = 67 * hash + Objects.hashCode(this.soci);
-        hash = 67 * hash + Objects.hashCode(this.modalitat);
+        int hash = 5;
+        hash = 59 * hash + Objects.hashCode(this.emPK);
         return hash;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public boolean equals(Object obj)
     {
@@ -118,13 +112,6 @@ public class EstadisticaModalitat implements Serializable
             return false;
         }
         final EstadisticaModalitat other = (EstadisticaModalitat) obj;
-        if (!Objects.equals(this.soci, other.soci)) {
-            return false;
-        }
-        if (!Objects.equals(this.modalitat, other.modalitat)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.emPK, other.emPK);
     }
-
 }
