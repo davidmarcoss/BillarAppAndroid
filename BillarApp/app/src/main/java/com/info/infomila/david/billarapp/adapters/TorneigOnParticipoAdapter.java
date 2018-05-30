@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.info.infomila.david.billarapp.R;
+import com.info.infomila.david.billarapp.listeners.TorneigOnParticipoClickListener;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -17,10 +18,12 @@ import info.infomila.billar.models.Torneig;
 public class TorneigOnParticipoAdapter extends RecyclerView.Adapter<TorneigOnParticipoAdapter.Holder> {
     private Context activity;
     private List<Torneig> tornejos;
+    private TorneigOnParticipoClickListener torneigOnParticipoClickListener;
 
-    public TorneigOnParticipoAdapter(Context activity, List<Torneig> tornejos) {
+    public TorneigOnParticipoAdapter(Context activity, List<Torneig> tornejos, TorneigOnParticipoClickListener torneigOnParticipoClickListener) {
         this.activity = activity;
         this.tornejos = tornejos;
+        this.torneigOnParticipoClickListener = torneigOnParticipoClickListener;
     }
 
     @Override
@@ -59,6 +62,15 @@ public class TorneigOnParticipoAdapter extends RecyclerView.Adapter<TorneigOnPar
             tvNomModalitat = itemView.findViewById(R.id.tvNomModalitat);
             tvDataInici = itemView.findViewById(R.id.tvDataInici);
             tvDataFi = itemView.findViewById(R.id.tvDataFi);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (TorneigOnParticipoAdapter.this.torneigOnParticipoClickListener != null) {
+                        TorneigOnParticipoAdapter.this.torneigOnParticipoClickListener.OnItemClick(tornejos.get(getLayoutPosition()));
+                    }
+                }
+            });
         }
     }
 }

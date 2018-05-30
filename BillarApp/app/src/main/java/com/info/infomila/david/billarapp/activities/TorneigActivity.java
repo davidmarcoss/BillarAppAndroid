@@ -5,20 +5,15 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 
 import com.info.infomila.david.billarapp.R;
 import com.info.infomila.david.billarapp.fragments.EstadistiquesFragment;
+import com.info.infomila.david.billarapp.fragments.TorneigClassificacioFragment;
 import com.info.infomila.david.billarapp.fragments.TornejosObertsFragment;
 import com.info.infomila.david.billarapp.fragments.TornejosOnParticipoFragment;
 
@@ -26,14 +21,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.infomila.billar.models.Soci;
+import info.infomila.billar.models.Torneig;
 
-public class MainActivity extends AppCompatActivity {
+public class TorneigActivity extends AppCompatActivity {
 
-    public static final String SOCI = "Soci";
     public static final String SESSION_ID = "session_id";
+    public static final String SOCI = "soci";
+    public static final String TORNEIG = "torneig";
 
-    public Soci soci;
     private String sessionId;
+    private Soci soci;
+    private Torneig torneig;
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
@@ -42,65 +40,35 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_torneig);
 
-        if (getIntent().getExtras() != null) {
-            soci = (Soci) getIntent().getExtras().get(SOCI);
-            sessionId = (String) getIntent().getExtras().get(SESSION_ID);
-        }
+        soci = (Soci) getIntent().getExtras().get(SOCI);
+        sessionId = (String) getIntent().getExtras().get(SESSION_ID);
+        torneig = (Torneig) getIntent().getExtras().get(TORNEIG);
+
 
         toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle("Billar App");
+        toolbar.setNavigationIcon(R.drawable.ic_left_arrow);
+        toolbar.setTitle(torneig.getNom());
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
 
         viewPager = findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
         tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
     }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, ProfileActivity.class);
-            intent.putExtra(MainActivity.SOCI, soci);
-            intent.putExtra(MainActivity.SESSION_ID, sessionId);
-            this.startActivityForResult(intent, 1);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 1) {
-            soci = (Soci) data.getExtras().get(SOCI);
-            sessionId = (String) data.getExtras().get(SESSION_ID);
-        } else if (resultCode == 2) {
-            soci = (Soci) data.getExtras().get(SOCI);
-            sessionId = (String) data.getExtras().get(SESSION_ID);
-        }
-    }
-
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(EstadistiquesFragment.newInstance(sessionId, soci), "ESTADISTIQUES");
-        adapter.addFragment(TornejosObertsFragment.newInstance(sessionId, soci), "TORNEJOS");
-        adapter.addFragment(TornejosOnParticipoFragment.newInstance(sessionId, soci), "TORNEJOS ON PARTICIPO");
+        adapter.addFragment(TorneigClassificacioFragment.newInstance(soci, torneig, sessionId), "CLASSIFICACIO");
+        adapter.addFragment(EstadistiquesFragment.newInstance(sessionId, soci), "PARTIDES");
         viewPager.setAdapter(adapter);
     }
 
@@ -133,4 +101,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(MainActivity.SOCI, soci);
+        intent.putExtra(MainActivity.SESSION_ID, sessionId);
+        setResult(2, intent);
+        finish();
+    }
 }

@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
 
+import info.infomila.billar.models.Classificacio;
 import info.infomila.billar.models.Soci;
 import info.infomila.billar.models.Torneig;
 
@@ -115,7 +116,7 @@ public class TCPClient {
 
             dataSalida.writeInt(3);
             dataSalida.flush();
-            dataSalida.writeObject(LoginActivity.pref.getString("session_id", null));
+            dataSalida.writeObject(sessionId);
             dataSalida.flush();
 
             try {
@@ -207,4 +208,44 @@ public class TCPClient {
         return status;
     }
 
+    public static List<Classificacio> getClassificacio(String sessionId, int sociId, int torneigId, int modalitatId) {
+        List<Classificacio> classificacions = null;
+
+        try {
+            InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
+            Socket socket = new Socket(serverAddr, SERVER_PORT);
+
+            ObjectInputStream dataEntrada = new ObjectInputStream(socket.getInputStream());
+            ObjectOutputStream dataSalida = new ObjectOutputStream(socket.getOutputStream());
+
+            dataSalida.writeInt(8);
+            dataSalida.flush();
+            dataSalida.writeObject(sessionId);
+            dataSalida.flush();
+            dataSalida.writeInt(sociId);
+            dataSalida.flush();
+            dataSalida.writeInt(torneigId);
+            dataSalida.flush();
+            dataSalida.writeInt(modalitatId);
+            dataSalida.flush();
+
+            try {
+                switch (dataEntrada.readInt()) {
+                    case 1:
+                        classificacions = (List<Classificacio>) dataEntrada.readObject();
+                        break;
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return classificacions;
+    }
 }

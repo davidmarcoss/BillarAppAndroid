@@ -1,6 +1,7 @@
 package com.info.infomila.david.billarapp.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,8 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.info.infomila.david.billarapp.R;
+import com.info.infomila.david.billarapp.activities.MainActivity;
+import com.info.infomila.david.billarapp.activities.ProfileActivity;
+import com.info.infomila.david.billarapp.activities.TorneigActivity;
 import com.info.infomila.david.billarapp.adapters.TorneigObertAdapter;
 import com.info.infomila.david.billarapp.adapters.TorneigOnParticipoAdapter;
+import com.info.infomila.david.billarapp.listeners.TorneigOnParticipoClickListener;
 import com.info.infomila.david.billarapp.network.TornejosObertsAsyncTask;
 import com.info.infomila.david.billarapp.network.TornejosOnParticipoAsyncTask;
 
@@ -23,7 +28,7 @@ import java.util.List;
 import info.infomila.billar.models.Soci;
 import info.infomila.billar.models.Torneig;
 
-public class TornejosOnParticipoFragment extends Fragment {
+public class TornejosOnParticipoFragment extends Fragment implements TorneigOnParticipoClickListener {
     private static final String SESSION_ID = "session_id";
     private static final String SOCI = "soci";
 
@@ -88,10 +93,19 @@ public class TornejosOnParticipoFragment extends Fragment {
         if (tornejos != null) this.tornejos = tornejos;
         if (rcvTornejosOnParticipo != null) {
             if(rcvTornejosOnParticipo.getAdapter()==null) {
-                torneigOnParticipoAdapter = new TorneigOnParticipoAdapter(this.getContext(), tornejos);
+                torneigOnParticipoAdapter = new TorneigOnParticipoAdapter(this.getContext(), tornejos, this);
                 rcvTornejosOnParticipo.setLayoutManager(new LinearLayoutManager(this.getContext()));
                 rcvTornejosOnParticipo.setAdapter(torneigOnParticipoAdapter);
             }
         }
+    }
+
+    @Override
+    public void OnItemClick(Torneig selected) {
+        Intent intent = new Intent(this.getActivity(), TorneigActivity.class);
+        intent.putExtra(TorneigActivity.SOCI, soci);
+        intent.putExtra(TorneigActivity.SESSION_ID, sessionId);
+        intent.putExtra(TorneigActivity.TORNEIG, selected);
+        this.startActivityForResult(intent, 2);
     }
 }
