@@ -2,6 +2,7 @@ package com.info.infomila.david.billarapp.fragments;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.info.infomila.david.billarapp.R;
 import com.info.infomila.david.billarapp.adapters.EstadisticaAdapter;
+import com.info.infomila.david.billarapp.network.EstadistiquesAsyncTask;
 
 import java.util.List;
 
@@ -53,16 +55,9 @@ public class EstadistiquesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View contenidorFragment = inflater.inflate(R.layout.fragment_estadistiques, container, false);
 
-
         rcvEstadistiques = contenidorFragment.findViewById(R.id.rcvEstadistiques);
-        if (rcvEstadistiques != null) {
-            if (rcvEstadistiques.getAdapter() == null) {
-                List<EstadisticaModalitat> llistaEstadistiques = soci.getEstadistiques();
-                estadisticaAdapter = new EstadisticaAdapter(this.getContext(), llistaEstadistiques);
-                rcvEstadistiques.setLayoutManager(new LinearLayoutManager(this.getContext()));
-                rcvEstadistiques.setAdapter(estadisticaAdapter);
-            }
-        }
+
+        EstadistiquesRequest();
 
         return contenidorFragment;
     }
@@ -78,5 +73,25 @@ public class EstadistiquesFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    public void EstadistiquesRequest() {
+        EstadistiquesAsyncTask estadistiquesAsyncTask = new EstadistiquesAsyncTask(this, sessionId);
+        estadistiquesAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public void OnEstadistiquesReceived(Soci s) {
+        if (s != null) {
+            this.soci = s;
+        }
+
+        if (rcvEstadistiques != null) {
+            if (rcvEstadistiques.getAdapter() == null) {
+                List<EstadisticaModalitat> llistaEstadistiques = soci.getEstadistiques();
+                estadisticaAdapter = new EstadisticaAdapter(this.getContext(), llistaEstadistiques);
+                rcvEstadistiques.setLayoutManager(new LinearLayoutManager(this.getContext()));
+                rcvEstadistiques.setAdapter(estadisticaAdapter);
+            }
+        }
     }
 }

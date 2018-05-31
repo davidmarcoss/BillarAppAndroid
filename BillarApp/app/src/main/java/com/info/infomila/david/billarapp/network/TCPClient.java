@@ -315,4 +315,41 @@ public class TCPClient {
 
         return partides;
     }
+
+    public static Soci GetEstadistiques(String sessionId) {
+        Soci user = null;
+
+        try {
+            InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
+            Socket socket = new Socket(serverAddr, SERVER_PORT);
+
+            ObjectInputStream dataEntrada = new ObjectInputStream(socket.getInputStream());
+            ObjectOutputStream dataSalida = new ObjectOutputStream(socket.getOutputStream());
+
+            dataSalida.writeInt(9);
+            dataSalida.flush();
+            dataSalida.writeObject(sessionId);
+            dataSalida.flush();
+
+            try {
+                int status = dataEntrada.readInt();
+                if (status == 1) {
+                    user = (Soci) dataEntrada.readObject();
+                } else {
+
+                }
+            } catch (ClassNotFoundException e) {
+                socket.close();
+            } finally {
+                socket.close();
+            }
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
 }
