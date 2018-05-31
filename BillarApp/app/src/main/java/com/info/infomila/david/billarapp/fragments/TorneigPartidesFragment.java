@@ -39,6 +39,7 @@ public class TorneigPartidesFragment extends Fragment implements PartidaItemClic
     private RecyclerView rcvPartides;
     private List<Partida> partides;
     private TorneigPartidaAdapter torneigPartidaAdapter;
+    private Partida lastPartida;
 
     public TorneigPartidesFragment() {
         // Required empty public constructor
@@ -97,9 +98,8 @@ public class TorneigPartidesFragment extends Fragment implements PartidaItemClic
     public void OnPartidesReceived(List<Partida> partides) {
         if (partides != null && partides.size() > 0) {
             this.partides = partides;
-            Log.d("PARTIDES", partides.size()+"");
             if (rcvPartides != null) {
-                if(rcvPartides.getAdapter()==null) {
+                if (rcvPartides.getAdapter() == null) {
                     torneigPartidaAdapter = new TorneigPartidaAdapter(this.getContext(), partides, soci, this);
                     rcvPartides.setLayoutManager(new LinearLayoutManager(this.getContext()));
                     rcvPartides.setAdapter(torneigPartidaAdapter);
@@ -115,7 +115,13 @@ public class TorneigPartidesFragment extends Fragment implements PartidaItemClic
             intent.putExtra(PartidaActivity.SESSION_ID, sessionId);
             intent.putExtra(PartidaActivity.SOCI, soci);
             intent.putExtra(PartidaActivity.PARTIDA, selected);
-            this.startActivity(intent);
+            lastPartida = selected;
+            this.startActivityForResult(intent, 1);
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
     }
 }

@@ -80,11 +80,11 @@ public class PartidaActivity extends AppCompatActivity {
 
             boolean initContrincant = false;
             if (partida.getSociA().equals(soci)) {
+                contrincant = partida.getSociB();
                 entradaDetallA = crearEntradaDetall(soci, 1);
                 dadesPartidaA = crearEntradaDetall(soci, 1);
                 entradaDetallB = crearEntradaDetall(contrincant, 0);
-                entradaDetallB = crearEntradaDetall(contrincant, 0);
-                contrincant = partida.getSociB();
+                dadesPartidaB = crearEntradaDetall(contrincant, 0);
             } else {
                 contrincant = partida.getSociA();
                 entradaDetallA = crearEntradaDetall(contrincant, 1);
@@ -141,7 +141,19 @@ public class PartidaActivity extends AppCompatActivity {
         btnAbandonar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (torn % 2 == 0) {
+                    finalitzarPartida(Partida.Guanyador.B, Partida.ModeVictoria.ABANDONAMENT);
+                } else {
+                    finalitzarPartida(Partida.Guanyador.A, Partida.ModeVictoria.ABANDONAMENT);
+                }
 
+            }
+        });
+
+        btnCancelarTorn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancelarTorn();
             }
         });
 
@@ -197,6 +209,7 @@ public class PartidaActivity extends AppCompatActivity {
         tvEntradaActualSociA.setText(dadesPartidaA.getEntrada() + "");
         tvNomSociA.setText(dadesPartidaA.getSociNom());
         tvCarambolesSociA.setText(dadesPartidaA.getCaramboles() + "");
+
         tvEntradaActualSociB.setText(dadesPartidaB.getEntrada() + "");
         tvNomSociB.setText(dadesPartidaB.getSociNom());
         tvCarambolesSociB.setText(dadesPartidaB.getCaramboles() + "");
@@ -206,8 +219,7 @@ public class PartidaActivity extends AppCompatActivity {
         int caramboles = Integer.parseInt(tvCarambolesEnCurs.getText().toString());
         caramboles += i;
         if (caramboles < 0) caramboles = 0;
-        if (caramboles > partida.getGrup().getCarambolesVictoria())
-            caramboles = partida.getGrup().getCarambolesVictoria();
+        if (caramboles > partida.getGrup().getCarambolesVictoria()) caramboles = partida.getGrup().getCarambolesVictoria();
 
         if (torn % 2 == 0) {
             entradaDetallA.setCaramboles(caramboles);
@@ -225,6 +237,7 @@ public class PartidaActivity extends AppCompatActivity {
         Partida.ModeVictoria modeVictoria = null;
         if (lastId > 0) {
             actualitzarTotals();
+
             if (torn % 2 == 0) {
                 entrades.add(new EntradaDetall(entradaDetallA));
                 entradaDetallA.setId(lastId);
@@ -244,16 +257,20 @@ public class PartidaActivity extends AppCompatActivity {
                     modeVictoria = Partida.ModeVictoria.PER_CARAMBOLES;
                 }
             }
-            torn++;
+
             btnCanviarTorn.setEnabled(true);
+
+            torn++;
             if (torn / 2 >= partida.getGrup().getLimitEntrades()) {
-                if (entradaDetallA.getCaramboles() != entradaDetallB.getCaramboles()) {
+                if (dadesPartidaA.getCaramboles() != dadesPartidaB.getCaramboles()) {
                     guanyador = dadesPartidaA.getCaramboles() > dadesPartidaB.getCaramboles() ? Partida.Guanyador.A : Partida.Guanyador.B;
                     modeVictoria = Partida.ModeVictoria.ENTRADES_ASSOLIDES;
                     btnCanviarTorn.setEnabled(false);
                 }
             }
+
             populateTorn();
+
             entradaAdapter.refreshEntrades(entrades);
 
             if (guanyador != null) {
@@ -288,6 +305,8 @@ public class PartidaActivity extends AppCompatActivity {
         pAux.setGuanyador(guanyador);
         pAux.setModeVictoria(modeVictoria);
         pAux.setEstatPartida(Partida.EstatPartida.JUGAT);
+
+        btnCanviarTorn.setEnabled(false);
 
         SendResultatPartidaAsyncTask connect = new SendResultatPartidaAsyncTask(this, pAux);
         connect.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, sessionId);
@@ -336,5 +355,9 @@ public class PartidaActivity extends AppCompatActivity {
                     })
                     .show();
         }
+    }
+
+    public void cancelarTorn() {
+
     }
 }

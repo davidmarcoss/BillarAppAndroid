@@ -34,10 +34,10 @@ public class Partida implements Serializable
 
     public Partida(Partida partida) {
         this.id = partida.id;
-        this.sociA = partida.sociA;
-        this.sociB = partida.sociB;
-        this.torneig = partida.torneig;
-        this.grup = partida.grup;
+        //this.sociA = partida.sociA;
+        //this.sociB = partida.sociB;
+        //this.torneig = partida.torneig;
+        //this.grup = partida.grup;
         this.carambolesA = partida.carambolesA;
         this.carambolesB = partida.carambolesB;
         this.numEntradesA = partida.numEntradesA;

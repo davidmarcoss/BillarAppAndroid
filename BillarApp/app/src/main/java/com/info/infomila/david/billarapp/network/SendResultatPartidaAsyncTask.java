@@ -12,7 +12,7 @@ public class SendResultatPartidaAsyncTask extends AsyncTask<String, String, Bool
     private Partida mPartida;
 
     public SendResultatPartidaAsyncTask(PartidaActivity partidaActivity, Partida pPartida) {
-        partidaActivity = partidaActivity;
+        this.partidaActivity = partidaActivity;
         mPartida = pPartida;
     }
 

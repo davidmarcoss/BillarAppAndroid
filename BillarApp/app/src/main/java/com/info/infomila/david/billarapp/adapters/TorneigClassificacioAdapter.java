@@ -33,7 +33,7 @@ public class TorneigClassificacioAdapter extends RecyclerView.Adapter<TorneigCla
     public void onBindViewHolder(TorneigClassificacioAdapter.Holder holder, int position) {
         Classificacio classificacio = classificacions.get(position);
 
-        holder.tvPos.setText(position + "");
+        holder.tvPos.setText((position + 1) + "");
         holder.tvSoci.setText(classificacio.getSoci());
         holder.tvPartidesGuanyades.setText(classificacio.getPatidesGuanyades()+"");
         holder.tvPartidesPerdudes.setText(classificacio.getPartidesPerdudes()+"");
