@@ -15,8 +15,10 @@
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.LoginActivity" android:screenOrientation="portrait">
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,7 +34,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
-        <activity android:name=".activities.TorneigActivity"></activity>
+        <activity android:name=".activities.TorneigActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".activities.PartidaActivity" android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

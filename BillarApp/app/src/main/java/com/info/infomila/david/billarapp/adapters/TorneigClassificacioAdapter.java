@@ -8,32 +8,29 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.info.infomila.david.billarapp.R;
-import com.info.infomila.david.billarapp.listeners.TorneigOnParticipoClickListener;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import info.infomila.billar.models.Classificacio;
-import info.infomila.billar.models.Torneig;
 
-public class ClassificacioAdapter extends RecyclerView.Adapter<ClassificacioAdapter.Holder> {
+public class TorneigClassificacioAdapter extends RecyclerView.Adapter<TorneigClassificacioAdapter.Holder> {
     private Context activity;
     private List<Classificacio> classificacions;
 
-    public ClassificacioAdapter(Context activity, List<Classificacio> classificacions) {
+    public TorneigClassificacioAdapter(Context activity, List<Classificacio> classificacions) {
         this.activity = activity;
         this.classificacions = classificacions;
     }
 
     @Override
-    public ClassificacioAdapter.Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TorneigClassificacioAdapter.Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(activity).inflate(R.layout.item_classificacio, parent, false);
-        ClassificacioAdapter.Holder holder = new ClassificacioAdapter.Holder(view);
+        TorneigClassificacioAdapter.Holder holder = new TorneigClassificacioAdapter.Holder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(ClassificacioAdapter.Holder holder, int position) {
+    public void onBindViewHolder(TorneigClassificacioAdapter.Holder holder, int position) {
         Classificacio classificacio = classificacions.get(position);
 
         holder.tvPos.setText(position + "");

@@ -32,6 +32,22 @@ public class Partida implements Serializable
     
     protected Partida() {}
 
+    public Partida(Partida partida) {
+        this.id = partida.id;
+        this.sociA = partida.sociA;
+        this.sociB = partida.sociB;
+        this.torneig = partida.torneig;
+        this.grup = partida.grup;
+        this.carambolesA = partida.carambolesA;
+        this.carambolesB = partida.carambolesB;
+        this.numEntradesA = partida.numEntradesA;
+        this.numEntradesB = partida.numEntradesB;
+        this.dataRealitzacio = partida.dataRealitzacio;
+        this.estatPartida = partida.estatPartida;
+        this.modeVictoria = partida.modeVictoria;
+        this.guanyador = partida.guanyador;
+    }
+
     public int getId()
     {
         return id;
@@ -188,5 +204,22 @@ public class Partida implements Serializable
     
     public enum Guanyador {
         A, B
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Partida partida = (Partida) o;
+
+        return id == partida.id;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 23 * hash + this.id;
+        return hash;
     }
 }

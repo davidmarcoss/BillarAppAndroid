@@ -11,13 +11,13 @@ import info.infomila.billar.models.Classificacio;
 import info.infomila.billar.models.Soci;
 import info.infomila.billar.models.Torneig;
 
-public class ClassificacioAsyncTask extends AsyncTask<String, String, List<Classificacio>> {
+public class TorneigClassificacioAsyncTask extends AsyncTask<String, String, List<Classificacio>> {
     private TorneigClassificacioFragment torneigClassificacioFragment;
     private Soci soci;
     private String sessionId;
     private Torneig torneig;
 
-    public ClassificacioAsyncTask(TorneigClassificacioFragment torneigClassificacioFragment, String sessionId, Soci soci, Torneig torneig){
+    public TorneigClassificacioAsyncTask(TorneigClassificacioFragment torneigClassificacioFragment, String sessionId, Soci soci, Torneig torneig){
         this.torneigClassificacioFragment = torneigClassificacioFragment;
         this.soci = soci;
         this.sessionId = sessionId;

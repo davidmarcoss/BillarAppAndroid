@@ -7,15 +7,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.info.infomila.david.billarapp.R;
-import com.info.infomila.david.billarapp.adapters.ClassificacioAdapter;
-import com.info.infomila.david.billarapp.adapters.TorneigOnParticipoAdapter;
-import com.info.infomila.david.billarapp.network.ClassificacioAsyncTask;
+import com.info.infomila.david.billarapp.adapters.TorneigClassificacioAdapter;
+import com.info.infomila.david.billarapp.network.TorneigClassificacioAsyncTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +33,7 @@ public class TorneigClassificacioFragment extends Fragment {
     private List<Classificacio> classificacions = new ArrayList<>();
 
     private RecyclerView rcvClassificacio;
-    private ClassificacioAdapter classificacioAdapter;
+    private TorneigClassificacioAdapter torneigClassificacioAdapter;
 
 
     public TorneigClassificacioFragment() {
@@ -88,8 +86,8 @@ public class TorneigClassificacioFragment extends Fragment {
     }
 
     public void ClassificacioRequest() {
-        ClassificacioAsyncTask classificacioAsyncTask = new ClassificacioAsyncTask(this, sessionId, soci, torneig);
-        classificacioAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        TorneigClassificacioAsyncTask torneigClassificacioAsyncTask = new TorneigClassificacioAsyncTask(this, sessionId, soci, torneig);
+        torneigClassificacioAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void OnClassificacioReceived(List<Classificacio> classificacions) {
@@ -97,9 +95,9 @@ public class TorneigClassificacioFragment extends Fragment {
             this.classificacions = classificacions;
             if (rcvClassificacio != null) {
                 if(rcvClassificacio.getAdapter()==null) {
-                    classificacioAdapter = new ClassificacioAdapter(this.getContext(), classificacions);
+                    torneigClassificacioAdapter = new TorneigClassificacioAdapter(this.getContext(), classificacions);
                     rcvClassificacio.setLayoutManager(new LinearLayoutManager(this.getContext()));
-                    rcvClassificacio.setAdapter(classificacioAdapter);
+                    rcvClassificacio.setAdapter(torneigClassificacioAdapter);
                 }
             }
         }

@@ -247,4 +247,18 @@ public class Soci implements Serializable
         }
         return true;
     }
+
+    public String getNomComplet()
+    {
+        String nomComplet = this.nom;
+
+        if (this.cognom1 != null) {
+            nomComplet += " " + this.cognom1;
+        }
+        if (this.cognom2 != null) {
+            nomComplet += " " + this.cognom2;
+        }
+
+        return nomComplet;
+    }
 }

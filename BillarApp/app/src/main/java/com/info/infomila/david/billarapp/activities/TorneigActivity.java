@@ -14,16 +14,19 @@ import android.view.View;
 import com.info.infomila.david.billarapp.R;
 import com.info.infomila.david.billarapp.fragments.EstadistiquesFragment;
 import com.info.infomila.david.billarapp.fragments.TorneigClassificacioFragment;
+import com.info.infomila.david.billarapp.fragments.TorneigPartidesFragment;
 import com.info.infomila.david.billarapp.fragments.TornejosObertsFragment;
 import com.info.infomila.david.billarapp.fragments.TornejosOnParticipoFragment;
+import com.info.infomila.david.billarapp.listeners.PartidaItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import info.infomila.billar.models.Partida;
 import info.infomila.billar.models.Soci;
 import info.infomila.billar.models.Torneig;
 
-public class TorneigActivity extends AppCompatActivity {
+public class TorneigActivity extends AppCompatActivity implements PartidaItemClickListener {
 
     public static final String SESSION_ID = "session_id";
     public static final String SOCI = "soci";
@@ -42,10 +45,11 @@ public class TorneigActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_torneig);
 
-        soci = (Soci) getIntent().getExtras().get(SOCI);
-        sessionId = (String) getIntent().getExtras().get(SESSION_ID);
-        torneig = (Torneig) getIntent().getExtras().get(TORNEIG);
-
+        if (getIntent().getExtras() != null) {
+            soci = (Soci) getIntent().getExtras().get(SOCI);
+            sessionId = (String) getIntent().getExtras().get(SESSION_ID);
+            torneig = (Torneig) getIntent().getExtras().get(TORNEIG);
+        }
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_left_arrow);
@@ -68,7 +72,7 @@ public class TorneigActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(TorneigClassificacioFragment.newInstance(soci, torneig, sessionId), "CLASSIFICACIO");
-        adapter.addFragment(EstadistiquesFragment.newInstance(sessionId, soci), "PARTIDES");
+        adapter.addFragment(TorneigPartidesFragment.newInstance(soci, torneig, sessionId), "PARTIDES");
         viewPager.setAdapter(adapter);
     }
 
@@ -108,5 +112,16 @@ public class TorneigActivity extends AppCompatActivity {
         intent.putExtra(MainActivity.SESSION_ID, sessionId);
         setResult(2, intent);
         finish();
+    }
+
+    @Override
+    public void OnItemClick(Partida pSelected) {
+        if (pSelected != null) {
+            Intent intent = new Intent(this, PartidaActivity.class);
+            intent.putExtra(PartidaActivity.SESSION_ID, sessionId);
+            intent.putExtra(PartidaActivity.SOCI, soci);
+            intent.putExtra(PartidaActivity.PARTIDA, pSelected);
+            this.startActivity(intent);
+        }
     }
 }

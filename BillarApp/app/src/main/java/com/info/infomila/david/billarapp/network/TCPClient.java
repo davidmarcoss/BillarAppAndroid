@@ -13,6 +13,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 
 import info.infomila.billar.models.Classificacio;
+import info.infomila.billar.models.Partida;
 import info.infomila.billar.models.Soci;
 import info.infomila.billar.models.Torneig;
 
@@ -222,8 +223,6 @@ public class TCPClient {
             dataSalida.flush();
             dataSalida.writeObject(sessionId);
             dataSalida.flush();
-            dataSalida.writeInt(sociId);
-            dataSalida.flush();
             dataSalida.writeInt(torneigId);
             dataSalida.flush();
             dataSalida.writeInt(modalitatId);
@@ -247,5 +246,73 @@ public class TCPClient {
         }
 
         return classificacions;
+    }
+
+    public static Boolean SendResultatPartida(String sessionId, Partida mPartida) {
+        Boolean status = false;
+
+        try {
+            InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
+            Socket socket = new Socket(serverAddr, SERVER_PORT);
+
+            ObjectInputStream dataEntrada = new ObjectInputStream(socket.getInputStream());
+            ObjectOutputStream dataSalida = new ObjectOutputStream(socket.getOutputStream());
+
+            dataSalida.writeInt(7);
+            dataSalida.flush();
+            dataSalida.writeObject(sessionId);
+            dataSalida.flush();
+            dataSalida.writeObject(mPartida);
+            dataSalida.flush();
+
+            int response = dataEntrada.readInt();
+            if (response == 1) {
+                status = true;
+            } else {
+                status = false;
+            }
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return  status;
+    }
+
+    public static List<Partida> getPartides(String sessionId, int torneigId) {
+        List<Partida> partides = null;
+
+        try {
+            InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
+            Socket socket = new Socket(serverAddr, SERVER_PORT);
+
+            ObjectInputStream dataEntrada = new ObjectInputStream(socket.getInputStream());
+            ObjectOutputStream dataSalida = new ObjectOutputStream(socket.getOutputStream());
+
+            dataSalida.writeInt(6);
+            dataSalida.flush();
+            dataSalida.writeObject(sessionId);
+            dataSalida.flush();
+            dataSalida.writeInt(torneigId);
+            dataSalida.flush();
+
+            try {
+                switch (dataEntrada.readInt()) {
+                    case 1:
+                        partides = (List<Partida>) dataEntrada.readObject();
+                        break;
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return partides;
     }
 }
