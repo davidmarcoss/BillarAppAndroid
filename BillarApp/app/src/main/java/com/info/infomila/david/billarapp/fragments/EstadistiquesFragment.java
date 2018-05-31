@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.info.infomila.david.billarapp.R;
 import com.info.infomila.david.billarapp.adapters.EstadisticaAdapter;
@@ -28,6 +29,7 @@ public class EstadistiquesFragment extends Fragment {
     private String sessionId;
     private RecyclerView rcvEstadistiques;
     private EstadisticaAdapter estadisticaAdapter;
+    private ProgressBar progressBar;
 
     public EstadistiquesFragment() {
         // Required empty public constructor
@@ -56,8 +58,10 @@ public class EstadistiquesFragment extends Fragment {
         View contenidorFragment = inflater.inflate(R.layout.fragment_estadistiques, container, false);
 
         rcvEstadistiques = contenidorFragment.findViewById(R.id.rcvEstadistiques);
+        progressBar = contenidorFragment.findViewById(R.id.progressBar);
 
         EstadistiquesRequest();
+        progressBar.setVisibility(View.VISIBLE);
 
         return contenidorFragment;
     }
@@ -84,6 +88,8 @@ public class EstadistiquesFragment extends Fragment {
         if (s != null) {
             this.soci = s;
         }
+
+        progressBar.setVisibility(View.INVISIBLE);
 
         if (rcvEstadistiques != null) {
             if (rcvEstadistiques.getAdapter() == null) {
