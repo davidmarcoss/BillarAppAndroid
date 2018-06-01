@@ -1,6 +1,7 @@
 package com.info.infomila.david.billarapp.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.info.infomila.david.billarapp.R;
 import com.info.infomila.david.billarapp.adapters.EntradaAdapter;
 import com.info.infomila.david.billarapp.db.HelperDB;
+import com.info.infomila.david.billarapp.fragments.TorneigPartidesFragment;
 import com.info.infomila.david.billarapp.listeners.PartidaItemClickListener;
 import com.info.infomila.david.billarapp.network.SendResultatPartidaAsyncTask;
 
@@ -146,7 +148,6 @@ public class PartidaActivity extends AppCompatActivity {
                 } else {
                     finalitzarPartida(Partida.Guanyador.A, Partida.ModeVictoria.ABANDONAMENT);
                 }
-
             }
         });
 
@@ -236,6 +237,7 @@ public class PartidaActivity extends AppCompatActivity {
         Partida.Guanyador guanyador = null;
         Partida.ModeVictoria modeVictoria = null;
         if (lastId > 0) {
+            btnCancelarTorn.setEnabled(true);
             actualitzarTotals();
 
             if (torn % 2 == 0) {
@@ -336,6 +338,9 @@ public class PartidaActivity extends AppCompatActivity {
                     .setMessage("Ha guanyat el soci " + strGuanyador + " per " + strModeVictoria)
                     .setPositiveButton("Acceptar", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent();
+                            intent.putExtra(TorneigPartidesFragment.LAST_PARTIDA_JUGADA, partida.getId());
+                            setResult(1, intent);
                             finish();
                         }
                     })
@@ -358,6 +363,22 @@ public class PartidaActivity extends AppCompatActivity {
     }
 
     public void cancelarTorn() {
+        EntradaDetall lastDetall = entrades.get(entrades.size() - 1);
 
+        torn--;
+
+        if (lastDetall.getSociTag().equals("A")) {
+            dadesPartidaA.setCaramboles(dadesPartidaA.getCaramboles() - lastDetall.getCaramboles());
+            dadesPartidaA.setEntrada(dadesPartidaA.getEntrada() - 1);
+        } else {
+            dadesPartidaB.setCaramboles(dadesPartidaB.getCaramboles() - lastDetall.getCaramboles());
+            dadesPartidaB.setEntrada(dadesPartidaB.getEntrada() - 1);
+        }
+
+        actualitzarTotals();
+
+        entrades.remove(entrades.size() - 1);
+
+        entradaAdapter.refreshEntrades(entrades);
     }
 }

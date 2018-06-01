@@ -40,7 +40,6 @@ public class Soci implements Serializable
         setCognom2(cognom2);
         setDataAlta(new Date());
         setPasswordHash(passwordHash);
-        //setFoto(foto);
         setActiu(actiu);
     }
 

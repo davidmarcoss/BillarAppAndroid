@@ -32,6 +32,7 @@ public class TorneigPartidesFragment extends Fragment implements PartidaItemClic
     private static final String SOCI = "soci";
     private static final String SESSION_ID = "session_id";
     private static final String TORNEIG = "torneig";
+    public static final String LAST_PARTIDA_JUGADA = "last_partida_jugada";
 
     private Soci soci;
     private String sessionId;
@@ -39,7 +40,7 @@ public class TorneigPartidesFragment extends Fragment implements PartidaItemClic
     private RecyclerView rcvPartides;
     private List<Partida> partides;
     private TorneigPartidaAdapter torneigPartidaAdapter;
-    private Partida lastPartida;
+    private int lastPartidaJugada = -1;
 
     public TorneigPartidesFragment() {
         // Required empty public constructor
@@ -98,6 +99,9 @@ public class TorneigPartidesFragment extends Fragment implements PartidaItemClic
     public void OnPartidesReceived(List<Partida> partides) {
         if (partides != null && partides.size() > 0) {
             this.partides = partides;
+            if (lastPartidaJugada >= 0) {
+                this.partides.remove(lastPartidaJugada);
+            }
             if (rcvPartides != null) {
                 if (rcvPartides.getAdapter() == null) {
                     torneigPartidaAdapter = new TorneigPartidaAdapter(this.getContext(), partides, soci, this);
@@ -115,13 +119,16 @@ public class TorneigPartidesFragment extends Fragment implements PartidaItemClic
             intent.putExtra(PartidaActivity.SESSION_ID, sessionId);
             intent.putExtra(PartidaActivity.SOCI, soci);
             intent.putExtra(PartidaActivity.PARTIDA, selected);
-            lastPartida = selected;
             this.startActivityForResult(intent, 1);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        super.onActivityResult(requestCode, resultCode, data);
+        lastPartidaJugada = -1;
+        if (resultCode == 1) {
+            lastPartidaJugada = (int) data.getExtras().get(LAST_PARTIDA_JUGADA);
+        }
     }
 }

@@ -61,6 +61,7 @@ public class EstadistiquesFragment extends Fragment {
         progressBar = contenidorFragment.findViewById(R.id.progressBar);
 
         EstadistiquesRequest();
+
         progressBar.setVisibility(View.VISIBLE);
 
         return contenidorFragment;

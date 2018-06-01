@@ -44,10 +44,10 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         progressBar = findViewById(R.id.progressBar);
 
-        editor.remove("nif");
+        /*editor.remove("nif");
         editor.remove("password");
         editor.remove("session_id");
-        editor.commit();
+        editor.commit();*/
 
         String nif = pref.getString("nif", null);
         String password = pref.getString("password", null);
@@ -81,20 +81,21 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void OnLoginReceived(Soci s) {
+        progressBar.setVisibility(View.INVISIBLE);
+
         if (s != null) {
             editor.putString("nif", s.getNif());
             editor.putString("password", s.getPasswordHash());
             editor.commit();
 
             Toast.makeText(getBaseContext(), "Login success", Toast.LENGTH_LONG).show();
+
             Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
             mainActivityIntent.putExtra(MainActivity.SOCI, s);
             mainActivityIntent.putExtra(MainActivity.SESSION_ID, pref.getString("session_id", null));
             startActivity(mainActivityIntent);
-            progressBar.setVisibility(View.INVISIBLE);
         } else {
             Toast.makeText(getBaseContext(), "Login fail", Toast.LENGTH_LONG).show();
-            progressBar.setVisibility(View.INVISIBLE);
             btnLogin.setEnabled(true);
         }
     }
