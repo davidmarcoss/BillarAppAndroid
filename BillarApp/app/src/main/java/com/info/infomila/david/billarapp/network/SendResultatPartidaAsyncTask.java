@@ -9,16 +9,22 @@ import info.infomila.billar.models.Partida;
 public class SendResultatPartidaAsyncTask extends AsyncTask<String, String, Boolean> {
 
     private PartidaActivity partidaActivity;
-    private Partida mPartida;
+    private String sessionId;
+    private Partida partida;
+    private int sociAId;
+    private int sociBId;
 
-    public SendResultatPartidaAsyncTask(PartidaActivity partidaActivity, Partida pPartida) {
+    public SendResultatPartidaAsyncTask(PartidaActivity partidaActivity, String sessionId,  Partida partida, int sociAId, int sociBId) {
         this.partidaActivity = partidaActivity;
-        mPartida = pPartida;
+        this.sessionId = sessionId;
+        this.partida = partida;
+        this.sociAId = sociAId;
+        this.sociBId = sociBId;
     }
 
     @Override
     protected Boolean doInBackground(String... params) {
-        return TCPClient.SendResultatPartida(params[0],mPartida);
+        return TCPClient.SendResultatPartida(sessionId, partida, sociAId, sociBId);
     }
 
     @Override

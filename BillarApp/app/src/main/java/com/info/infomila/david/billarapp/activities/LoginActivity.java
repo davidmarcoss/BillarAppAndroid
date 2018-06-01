@@ -44,10 +44,10 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         progressBar = findViewById(R.id.progressBar);
 
-        /*editor.remove("nif");
+        editor.remove("nif");
         editor.remove("password");
         editor.remove("session_id");
-        editor.commit();*/
+        editor.commit();
 
         String nif = pref.getString("nif", null);
         String password = pref.getString("password", null);

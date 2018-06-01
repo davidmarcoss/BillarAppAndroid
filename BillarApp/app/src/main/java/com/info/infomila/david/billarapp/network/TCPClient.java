@@ -248,7 +248,7 @@ public class TCPClient {
         return classificacions;
     }
 
-    public static Boolean SendResultatPartida(String sessionId, Partida mPartida) {
+    public static Boolean SendResultatPartida(String sessionId, Partida mPartida, int sociAId, int sociBId) {
         Boolean status = false;
 
         try {
@@ -261,6 +261,10 @@ public class TCPClient {
             dataSalida.writeInt(7);
             dataSalida.flush();
             dataSalida.writeObject(sessionId);
+            dataSalida.flush();
+            dataSalida.writeInt(sociAId);
+            dataSalida.flush();
+            dataSalida.writeInt(sociBId);
             dataSalida.flush();
             dataSalida.writeObject(mPartida);
             dataSalida.flush();

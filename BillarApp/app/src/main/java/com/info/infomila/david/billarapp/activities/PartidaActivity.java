@@ -310,8 +310,8 @@ public class PartidaActivity extends AppCompatActivity {
 
         btnCanviarTorn.setEnabled(false);
 
-        SendResultatPartidaAsyncTask connect = new SendResultatPartidaAsyncTask(this, pAux);
-        connect.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, sessionId);
+        SendResultatPartidaAsyncTask connect = new SendResultatPartidaAsyncTask(this, sessionId, pAux, dadesPartidaA.getSociId(), dadesPartidaB.getSociId());
+        connect.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void actualitzarTotals() {
@@ -319,11 +319,6 @@ public class PartidaActivity extends AppCompatActivity {
         dadesPartidaB.setEntrada(entradaDetallB.getEntrada());
         dadesPartidaA.setCaramboles(dadesPartidaA.getCaramboles() + entradaDetallA.getCaramboles());
         dadesPartidaB.setCaramboles(dadesPartidaB.getCaramboles() + entradaDetallB.getCaramboles());
-    }
-
-    private void SendResultPartidaRequest() {
-        SendResultatPartidaAsyncTask sendResultatPartidaAsyncTask = new SendResultatPartidaAsyncTask(this, partida);
-        sendResultatPartidaAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void SendResultPartidaResponse(Boolean status) {
@@ -359,26 +354,35 @@ public class PartidaActivity extends AppCompatActivity {
                         }
                     })
                     .show();
+
+                btnCanviarTorn.setEnabled(true);
         }
     }
 
     public void cancelarTorn() {
-        EntradaDetall lastDetall = entrades.get(entrades.size() - 1);
+        if (entrades.size() > 0) {
+            EntradaDetall lastDetall = entrades.get(entrades.size() - 1);
 
-        torn--;
+            torn--;
 
-        if (lastDetall.getSociTag().equals("A")) {
-            dadesPartidaA.setCaramboles(dadesPartidaA.getCaramboles() - lastDetall.getCaramboles());
-            dadesPartidaA.setEntrada(dadesPartidaA.getEntrada() - 1);
-        } else {
-            dadesPartidaB.setCaramboles(dadesPartidaB.getCaramboles() - lastDetall.getCaramboles());
-            dadesPartidaB.setEntrada(dadesPartidaB.getEntrada() - 1);
+            if (lastDetall.getSociTag().equals("A")) {
+                dadesPartidaA.setCaramboles(dadesPartidaA.getCaramboles() - lastDetall.getCaramboles());
+                dadesPartidaA.setEntrada(dadesPartidaA.getEntrada() - 1);
+                entradaDetallB.setEntrada(entradaDetallB.getEntrada() - 1);
+            } else {
+                dadesPartidaB.setCaramboles(dadesPartidaB.getCaramboles() - lastDetall.getCaramboles());
+                dadesPartidaB.setEntrada(dadesPartidaB.getEntrada() - 1);
+                entradaDetallA.setEntrada(entradaDetallA.getEntrada() - 1);
+            }
+
+            actualitzarTotals();
+            populateTorn();
+
+            entrades.remove(entrades.size() - 1);
+
+            entradaAdapter.refreshEntrades(entrades);
         }
 
-        actualitzarTotals();
-
-        entrades.remove(entrades.size() - 1);
-
-        entradaAdapter.refreshEntrades(entrades);
+        btnCancelarTorn.setEnabled(false);
     }
 }
