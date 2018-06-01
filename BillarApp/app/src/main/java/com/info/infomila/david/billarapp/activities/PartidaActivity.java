@@ -322,41 +322,26 @@ public class PartidaActivity extends AppCompatActivity {
     }
 
     public void SendResultPartidaResponse(Boolean status) {
-        if (status) {
-            AlertDialog.Builder builder;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-            } else {
-                builder = new AlertDialog.Builder(this);
-            }
-            builder.setTitle("Sortir")
-                    .setMessage("Ha guanyat el soci " + strGuanyador + " per " + strModeVictoria)
-                    .setPositiveButton("Acceptar", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent();
-                            intent.putExtra(TorneigPartidesFragment.LAST_PARTIDA_JUGADA, partida.getId());
-                            setResult(1, intent);
-                            finish();
-                        }
-                    })
-                    .show();
-        } else {
-            AlertDialog.Builder builder;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-            } else {
-                builder = new AlertDialog.Builder(this);
-            }
-            builder.setTitle("Error")
-                    .setMessage("Hi ha hagut un error al guardar la partida")
-                    .setPositiveButton("Acceptar", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    })
-                    .show();
 
-                btnCanviarTorn.setEnabled(true);
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
         }
+        builder.setTitle("Sortir")
+                .setMessage("Ha guanyat el soci " + strGuanyador + " per " + strModeVictoria)
+                .setPositiveButton("Acceptar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent();
+                        intent.putExtra(TorneigPartidesFragment.LAST_PARTIDA_JUGADA, partida.getId());
+                        setResult(1, intent);
+                        finish();
+                    }
+                })
+                .show();
+
+        btnCanviarTorn.setEnabled(true);
     }
 
     public void cancelarTorn() {
